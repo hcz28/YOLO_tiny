@@ -161,8 +161,9 @@ class YOLOTiny:
                     [125,206,130],[60,219,211],[143,54,134],[144,156,194],[239,208,31]
                 ]
         img_cp = self.img.copy()
-        if self.output_txt != None:
-            txt = open(self.output_txt, 'w')
+        output_txt = []
+        #if self.output_txt != None:
+        #    txt = open(self.output_txt, 'w')
         for i in range(len(results)):
             x = int(results[i][1])
             y = int(results[i][2])
@@ -174,17 +175,19 @@ class YOLOTiny:
                     colors[results[i][0]], -1)
             cv2.putText(img_cp, label, (x-w+2, y-h-6), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                         (0, 0, 0), 2)
-            if self.output_txt != None:
-                txt.write(label + ',' + str(x) + ',' + str(y) + ',' + str(w) + ','
-                        + str(h) + ',' + str(results[i][5]) + '\n')
+            #if self.output_txt != None:
+            #    txt.write(label + ',' + str(x) + ',' + str(y) + ',' + str(w) + ','
+            #            + str(h) + ',' + str(results[i][5]) + '\n')
+            output_txt.append([label + ' ' + str(results[i][5]) + ' ' + str(x - w) + ' ' +
+                str(y - h) + ' ' + str(x + w) + ' ' + str(y + h) + '\n'])
         #if self.save_img:
         #    cv2.imwrite(self.result_img, img_cp)
         #if self.show_img:
         #    cv2.imshow('YOLO tiny detection', img_cp)
         #    cv2.waitKey(10000)
-        if self.output_txt != None:
-            txt.close()
-        return img_cp
+        #if self.output_txt != None:
+        #    txt.close()
+        return img_cp, output_txt
     
     def _interpret_output(self, output):
         """

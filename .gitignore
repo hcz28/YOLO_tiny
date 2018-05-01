@@ -1,3 +1,6 @@
 __pycache__
 history
 *.pyc
+VOC
+VOCtest
+darkflow
