@@ -36,11 +36,11 @@ def build_parser():
             help = 'dictionary for test files', metavar = 'TESTDIR', required = True)
 
     parser.add_argument('--prob_threshold', type = float, dest = 'prob_threshold',
-            help = 'probability threshold for boxes', metavar = 'PROB_THRESHOLD',
-            default = PROB_THRESHOLD)
+            help = 'probability threshold for boxes, default 0.1', 
+            metavar = 'PROB_THRESHOLD', default = PROB_THRESHOLD)
 
     parser.add_argument('--NMS_threshold', type = float, dest = 'nms_threshold',
-            help = 'iou threshold for nms', metavar = 'NMS_THRESHOLD',
+            help = 'iou threshold for nms, default 0.5', metavar = 'NMS_THRESHOLD',
             default = NMS_THRESHOLD)
 
     parser.add_argument('--show', dest = 'show', action = 'store_true', 
