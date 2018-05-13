@@ -37,6 +37,11 @@ class YOLOTiny:
         self.B = B
         self.C = C
         self._build_network()
+        self.sess.run(tf.global_variables_initializer())
+        self.saver = tf.train.Saver()
+        #ckpt = tf.train.get_checkpoint_state(model_path)
+        #self.saver.restore(self.sess, ckpt.model_checkpoint_path)
+        self.saver.restore(self.sess, self.model_path)
 
     def _build_network(self):
         """
@@ -58,7 +63,7 @@ class YOLOTiny:
         conv_7 = self._conv2d(pool_6, 1024, 3, 1)
         conv_8 = self._conv2d(conv_7, 1024, 3, 1)
         conv_9 = self._conv2d(conv_8, 1024, 3, 1)
-        fc_1 = self._fc(conv_9, 256, flat = True, linear = False)
+        fc_1 = self._fc(conv_9, 256, flat = True, linear = True)
         fc_2 = self._fc(fc_1, 4096, flat = False, linear = False)
         num_outputs = self.S * self.S * (self.C + self.B * 5)
         fc_3 = self._fc(fc_2, num_outputs, flat = False, linear = True)
@@ -125,13 +130,13 @@ class YOLOTiny:
         self.img = image
         self.height, self.width, _ = self.img.shape 
         self._preprocess_image()
-        self.sess.run(tf.global_variables_initializer())
-        self.saver = tf.train.Saver()
-        self.saver.restore(self.sess, self.model_path)
+        #self.sess.run(tf.global_variables_initializer())
+        #self.saver = tf.train.Saver()
+        #self.saver.restore(self.sess, self.model_path)
         output = self.sess.run(self.pred, feed_dict = {self.x: self.input})
         results = self._interpret_output(output)
-        result_img = self._draw_rectangle(results)
-        return result_img
+        result_img, output_txt = self._draw_rectangle(results)
+        return result_img, output_txt
 
     def _preprocess_image(self):
         """
@@ -170,10 +175,14 @@ class YOLOTiny:
             w = int(results[i][3])//2
             h = int(results[i][4])//2
             label = self.labels[results[i][0]]
-            cv2.rectangle(img_cp, (x-w, y-h), (x+w, y+h), colors[results[i][0]], 2)
-            cv2.rectangle(img_cp, (x-w-1, y-h-20), (x-w+12*len(label), y-h),
+            left = x- w + 20
+            up = y - h + 20
+            right = x + w - 20
+            down = y + h - 20
+            cv2.rectangle(img_cp, (left, up), (right, down), colors[results[i][0]], 2)
+            cv2.rectangle(img_cp, (left-1, up-20), (left+12*len(label), up),
                     colors[results[i][0]], -1)
-            cv2.putText(img_cp, label, (x-w+2, y-h-6), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+            cv2.putText(img_cp, label, (left+2, up-6), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
                         (0, 0, 0), 2)
             #if self.output_txt != None:
             #    txt.write(label + ',' + str(x) + ',' + str(y) + ',' + str(w) + ','
@@ -280,7 +289,6 @@ class YOLOTiny:
     
     def _iou(self, box1, box2):
         """
-        更改IOU计算方式
         Calculate the intersection of union.
         """
          
@@ -311,4 +319,5 @@ class YOLOTiny:
         else:
             intersection = width * height
         iou = intersection / (box1[2]*box1[3] + box2[2]*box2[3] - intersection)
+        #iou = intersection / min(box1[2]*box1[3], box2[2]*box2[3])
         return iou

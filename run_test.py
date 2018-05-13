@@ -150,7 +150,7 @@ def main():
             if opts.output_img:
                 out.release()
             end_time = time.time()
-            print("\n----------------YOLO tiny test for " + filename + "-------------------\n")
+            print("\n----------------YOLO tiny test for " + opts.testdir  + "-------------------\n")
             print('The total test time is {0}s'.format(end_time - start_time))
 
     #if opts.output_img:
