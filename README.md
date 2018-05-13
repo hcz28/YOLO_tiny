@@ -6,19 +6,21 @@ Implementation of YOLO tiny (version 1) with tensorflow. This project only suppo
 
 - model: tiny yolo checkpoint
 - filetype: 'image' or 'video'
-- filename: filename
-- show: whether to show the output image/video
-- output_txt: filename for output txt
-- output_img: filename for output image/video (only .avi is supported for video)
+- testdir: dictionary for test files
+- prob_threshold: probability threshold for bounding boxes, default 0.1
+- NMS_threshold: IOU threshold for NMS, default 0.5
+- show: show the output image/video
+- output_txt: write detection results into text
+- output_img: write detection results into image/video (only .avi is supported)
 
 e.g.
 ```
-python run_test --model='weigts/YOLO_tiny.ckpt' --filetype='image' --filename='test/dog.jpg' --output_txt='results/dog.txt' --output_img='results/dog.jpg' --show
+python run_test --model='weigts/YOLO_tiny.ckpt' --filetype='image' --testdir='test_imgs' --output_txt --output_img --show
 ```
 
 ## Results
 
-![dog](https://github.com/hcz28/YOLO_tiny/blob/master/results/dog.jpg?raw=true)
+![dog](https://github.com/hcz28/YOLO_tiny/blob/master/result_imgs/dog.jpg?raw=true)
 
 ## Requirements
 
@@ -28,6 +30,6 @@ python run_test --model='weigts/YOLO_tiny.ckpt' --filetype='image' --filename='t
 
 ## References
 
-- Most of the code comes from [gliese581gg/YOLO_tensorflow](https://github.com/gliese581gg/YOLO_tensorflow)
+- [gliese581gg/YOLO_tensorflow](https://github.com/gliese581gg/YOLO_tensorflow)
 
 More details in the future...
