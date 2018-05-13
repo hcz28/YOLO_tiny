@@ -15,7 +15,7 @@ Implementation of YOLO tiny (version 1) with tensorflow. This project only suppo
 
 e.g.
 ```
-python run_test --model='weigts/YOLO_tiny.ckpt' --filetype='image' --testdir='test_imgs' --output_txt --output_img --show
+python run_test.py --model='weigts/YOLO_tiny.ckpt' --filetype='image' --testdir='test_imgs' --output_txt --output_img --show
 ```
 
 ## Results
